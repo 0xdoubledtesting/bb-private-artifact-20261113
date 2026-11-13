@@ -9,6 +9,8 @@ permissions:
 jobs:
   fixture:
     runs-on: ubuntu-latest
+    env:
+      FIXTURE_CANARY: ${{ secrets.GH_AW_PROTECTED_FILE_CANARY }}
     steps:
       - name: Checkout pull request revision
         uses: actions/checkout@v4
