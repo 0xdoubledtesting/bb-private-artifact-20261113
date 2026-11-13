@@ -1,2 +1,3 @@
-# bb-private-artifact-20261113
-Authorized private artifact authorization fixture
+# Same-repository external-opener fixture
+
+Harmless bounded marker for approval-gating behavior.
