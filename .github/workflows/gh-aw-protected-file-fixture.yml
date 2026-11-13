@@ -10,5 +10,13 @@ jobs:
   fixture:
     runs-on: ubuntu-latest
     steps:
-      - name: Base revision marker
-        run: echo "BASE_WORKFLOW=true" >> "$GITHUB_STEP_SUMMARY"
+      - name: Harmless canary presence proof
+        env:
+          FIXTURE_CANARY: ${{ secrets.GH_AW_PROTECTED_FILE_CANARY }}
+        run: |
+          if [ -n "$FIXTURE_CANARY" ]; then
+            echo "CANARY_PRESENT=true" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "CANARY_PRESENT=false" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
