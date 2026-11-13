@@ -3,8 +3,6 @@ description: Harmless protected-file fixture
 runs:
   using: composite
   steps:
-    - name: Old protected Action marker
+    - name: Base local Action marker
       shell: bash
-      run: |
-        echo "ATTACKER_OLD_HEAD_ACTION=true"
-        echo "ATTACKER_OLD_HEAD_ACTION=true" >> "$GITHUB_STEP_SUMMARY"
+      run: echo "BASE_LOCAL_ACTION=true" >> "$GITHUB_STEP_SUMMARY"
