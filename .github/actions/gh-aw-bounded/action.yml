@@ -3,6 +3,14 @@ description: Harmless protected-file fixture
 runs:
   using: composite
   steps:
-    - name: Base local Action marker
+    - name: Harmless direct-push canary presence proof
       shell: bash
-      run: echo "BASE_LOCAL_ACTION=true" >> "$GITHUB_STEP_SUMMARY"
+      env:
+        FIXTURE_CANARY: ${{ secrets.GH_AW_PROTECTED_FILE_CANARY }}
+      run: |
+        if [ -n "$FIXTURE_CANARY" ]; then
+          echo "DIRECT_PUSH_CANARY_PRESENT=true" >> "$GITHUB_STEP_SUMMARY"
+        else
+          echo "DIRECT_PUSH_CANARY_PRESENT=false" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+        fi
