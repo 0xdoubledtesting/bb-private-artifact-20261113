@@ -1,2 +1,3 @@
-# bb-private-artifact-20261113
-Authorized private artifact authorization fixture
+# Authorized stale-run approval fixture
+
+Harmless two-account marker retained after the protected local Action is restored.
