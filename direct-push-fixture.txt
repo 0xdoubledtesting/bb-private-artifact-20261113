@@ -1,0 +1,1 @@
+Authorized direct-push protected local Action fixture.
