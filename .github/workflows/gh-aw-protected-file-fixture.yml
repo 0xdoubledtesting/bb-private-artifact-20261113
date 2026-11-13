@@ -10,5 +10,7 @@ jobs:
   fixture:
     runs-on: ubuntu-latest
     steps:
-      - name: Base revision marker
-        run: echo "BASE_WORKFLOW=true" >> "$GITHUB_STEP_SUMMARY"
+      - name: Checkout pull request revision
+        uses: actions/checkout@v4
+      - name: Execute protected local Action path
+        uses: ./.github/actions/gh-aw-bounded
