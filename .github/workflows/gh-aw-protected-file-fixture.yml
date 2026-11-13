@@ -1,18 +1,46 @@
-name: gh-aw protected-file timing fixture
+name: gh-aw check-run revision race fixture
 
 on:
   pull_request:
 
 permissions:
   contents: read
+  pull-requests: read
+  checks: write
 
 jobs:
-  fixture:
+  revision-binding-proof:
+    if: github.head_ref == 'check-run-race-poc-20261113'
     runs-on: ubuntu-latest
-    env:
-      FIXTURE_CANARY: ${{ secrets.GH_AW_PROTECTED_FILE_CANARY }}
     steps:
-      - name: Checkout pull request revision
-        uses: actions/checkout@v4
-      - name: Execute protected local Action path
-        uses: ./.github/actions/gh-aw-bounded
+      - name: Allow a newer pull-request head to arrive
+        run: sleep 60
+      - name: Publish only when the analyzed head became stale
+        uses: actions/github-script@v7
+        env:
+          ANALYZED_SHA: ${{ github.event.pull_request.head.sha }}
+        with:
+          script: |
+            const analyzed = process.env.ANALYZED_SHA;
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+            if (pr.head.sha === analyzed) {
+              core.info(`NO_RACE current=${pr.head.sha}`);
+              return;
+            }
+            const { data: check } = await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'GH-AW Revision Binding Live PoC',
+              head_sha: pr.head.sha,
+              status: 'completed',
+              conclusion: 'success',
+              output: {
+                title: 'Stale analysis marked a newer head successful',
+                summary: `Analyzed ${analyzed}; published on ${pr.head.sha}`,
+              },
+            });
+            core.info(`REVISION_BINDING_POC=${JSON.stringify({ analyzed_sha: analyzed, published_sha: pr.head.sha, check_run_id: check.id })}`);
