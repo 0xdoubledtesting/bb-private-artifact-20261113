@@ -1,0 +1,14 @@
+name: gh-aw protected-file timing fixture
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  fixture:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Base revision marker
+        run: echo "BASE_WORKFLOW=true" >> "$GITHUB_STEP_SUMMARY"
